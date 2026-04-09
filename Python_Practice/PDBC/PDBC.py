@@ -1,0 +1,101 @@
+import mysql.connector
+
+# print(mysql.connector)
+# after connection, need to create connect Obj
+db_C = mysql.connector.connect( #dbc object
+host="localhost",
+user="root",
+database="d12_pdbc",
+password="Dark@559"
+)
+
+
+table_Creation_Query="""
+create table if not exists employees(
+    id int primary key ,
+    name varchar(50) not null,
+    age int,
+    email varchar(50) not null unique,
+    salary decimal(10,2) not null 
+)
+"""
+# print(dbC,"13th line")
+print("Database connected successfully....")
+
+cursor__ob=db_C.cursor() # cursor method is having excute method #cursor object
+
+# print(cursor__,"cusror__")
+cursor__ob.execute(table_Creation_Query)
+
+# print("table created successfully.....")
+
+
+while True:
+    
+    print("1. Add Employees")
+    print("2. Read Employees")
+    print("3. Update Employee")
+    print("4. Delete Employee")
+    print("Enter 5 to Exit")
+
+    option=int(input("Enter your choice here :-- "))
+
+    if option == 1:
+        i=int(input("Enter id here :-- "))
+        n =input("Enter name here :-- ")
+        a = int(input("Enter age here :-- "))
+        e =input("Enter email here :-- ")
+        s = float(input("Enter salary here  :--  "))
+        query_Inserting_Emp="insert into employees (id,name,age,email,salary) values (%s,%s,%s,%s,%s)"#query of inserting
+        data=(i,n,a,e,s) # data to be into insert query
+        cursor__ob.execute(query_Inserting_Emp,data) # executing the query and inserting data to table
+        db_C.commit() # making insrting opeartion chnages to save permanantly
+        print("Employee addedd successfully.....")
+
+    elif option == 2: 
+        query_Reading_Emp="select * from employees"
+        cursor__ob.execute(query_Reading_Emp)
+        data=cursor__ob.fetchall()
+        for i in data:
+            print(i[0],i[1],i[2],i[3],i[4])
+        # print("got all emps",data)
+
+    elif option == 3:
+
+        query_Reading_Emp="select * from employees"
+        cursor__ob.execute(query_Reading_Emp)
+        data=cursor__ob.fetchall()
+        for i in data:
+            print(i[0],i[1],i[2],i[3],i[4])
+
+        id=int(input("Enter emp id to update the details of emp :-- "))
+        ag=int(input("Enter age here :-- "))
+        sal=float(input("Enter salary here :--   "))
+
+        query_Update_Emp ="update employees set salary=%s,age=%s where id = %s"
+        data=(sal,ag,id)   
+        cursor__ob.execute(query_Update_Emp,data)
+        db_C.commit()
+
+        print("Employee updated successfully....")
+
+    elif option == 4:
+        query_Reading_Emp="select * from employees"
+        cursor__ob.execute(query_Reading_Emp)
+        data=cursor__ob.fetchall()
+        for i in data:
+            print(i[0],i[1],i[2],i[3],i[4])
+
+        print("choose id to Delete Employee")   
+        id=int(input("Enter id to delete Employee :--  "))
+        query_Delete_Emp="delete from employees where id =%s"
+        data=(id,)
+        cursor__ob.execute(query_Delete_Emp,data)
+        db_C.commit()
+
+
+        print("Employee Deleted successfully....") 
+    else:
+        break;
+
+
